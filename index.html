@@ -59,7 +59,7 @@
                             const message = row[2];
                             const imageUrl = row[1];
 
-                            var match = driveLink.match(/[-\w]{25,}/);
+                            var match = imageUrl.match(/[-\w]{25,}/);
                             var iframeSrc = match ? "https://drive.google.com/file/d/" + match[0] + "/preview" : "No image";
 
                             // Create entry container

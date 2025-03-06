@@ -51,19 +51,23 @@
                     if (rows) {
                         const scrapbookContainer = document.getElementById('scrapbook-container');
                         scrapbookContainer.innerHTML = ''; // Clear previous data
+                        var header = true;
 
-                        rows.forEach((row, index) => {
+                        rows.slice(1).reverse().forEach((row, index) => {
                             // Assuming columns: Name, Message, Image URL
                             const name = row[0];
                             const message = row[2];
                             const imageUrl = row[1];
+
+                            var match = driveLink.match(/[-\w]{25,}/);
+                            var iframeSrc = match ? "https://drive.google.com/file/d/" + match[0] + "/preview" : "No image";
 
                             // Create entry container
                             const entry = document.createElement('div');
                             entry.classList.add('entry');
                             entry.innerHTML = `
                                 <h3>${name}</h3>
-                                <iframe src="${imageUrl}" allow="autoplay"></iframe>
+                                <iframe src="${iframeSrc}" allow="autoplay"></iframe>
                                 <p><strong>${message}</strong></p>
                             `;
                             scrapbookContainer.appendChild(entry);

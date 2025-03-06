@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reactive Scrapbook</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .entry {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Scrapbook Entries</h1>
+    <div class="container" id="scrapbook-container"></div>
+
+    <script>
+        const apiKey = 'AIzaSyBKFpEpGJUNNZmUTCEyyDhQA7QcMXE_yMA'; // Replace with your Google Sheets API key
+        const sheetId = '1y6ZrpY0rOPhLQDklpQhoe75Z3yeGTP0d'; // Replace with your Google Sheets ID
+        const range = 'Form responses 1!A:C'; // Adjust range based on your data
+
+        // Function to fetch Google Sheet data
+        function fetchSheetData() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const rows = data.values;
+                    if (rows) {
+                        const scrapbookContainer = document.getElementById('scrapbook-container');
+                        scrapbookContainer.innerHTML = ''; // Clear previous data
+
+                        rows.forEach((row, index) => {
+                            // Assuming columns: Name, Message, Image URL
+                            const name = row[0];
+                            const message = row[1];
+                            const imageUrl = row[2];
+
+                            // Create entry container
+                            const entry = document.createElement('div');
+                            entry.classList.add('entry');
+                            entry.innerHTML = `
+                                <h3>${name}</h3>
+                                <iframe src="${imageUrl}" allow="autoplay"></iframe>
+                                <p><strong>${message}</strong></p>
+                            `;
+                            scrapbookContainer.appendChild(entry);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Automatically refresh the data every 10 seconds
+        setInterval(fetchSheetData, 10000); // 10000 ms = 10 seconds
+
+        // Initial data fetch
+        fetchSheetData();
+    </script>
+</body>
+</html>

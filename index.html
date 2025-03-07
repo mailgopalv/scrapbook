@@ -179,7 +179,9 @@
 
             entry.innerHTML = `
                 <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
-                ${iframeSrc !== '' ? '<div class="image-container"><iframe src="${iframeSrc}" allow="autoplay"></iframe></div>' : ''}
+                <div class="image-container">
+                    ${iframeSrc !== '' ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<img src="default.png" style= alt="No Image" />'}
+                </div>
                 <p class="message">"${message}"</p>
             `;
 

@@ -125,6 +125,11 @@ iframe {
     height: 100%;
     border: none;
     object-fit: cover;
+    pointer-events: auto; /* Enable pointer events by default */
+}
+
+body.scrolling iframe {
+    pointer-events: none; /* Disable interactions while scrolling */
 }
 
 /* Content (40% of Card) */
@@ -303,8 +308,17 @@ span {
             }
         }
 
+        let isScrolling;
+
         // Function to detect when user scrolls near the bottom
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', function () {
+            document.body.classList.add("scrolling");
+            clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                document.body.classList.remove("scrolling");
+            }, 200); // Re-enable iframe interactions after scrolling stops
+
+
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
                 loadMoreEntries(batchSize); // Load 10 more entries when scrolling near bottom
             }

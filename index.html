@@ -150,7 +150,7 @@ iframe {
     font-size: 14px;
     font-weight: bold;
     font-style: italic;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Playlist Script', cursive;
     margin-top: 5px;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.3);
@@ -164,8 +164,9 @@ iframe {
     text-wrap: auto;
 }
 
-span{
+span {
     float: right;
+    font-family: 'Nunito Sans', sans-serif; 
 }
 
 .default-img {
@@ -292,7 +293,7 @@ span{
                     ${iframeSrc !== '' ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<img src="default-1.jpeg" class="default-img" alt="No Image" />'}
                 </div>
                 <!--<div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>-->
-                <p class="message">"${message}" <br/><br/><span>- ${name}</span></p>
+                <p class="message">"${message}" <br/><br/><span>- ${name}<span></p>
             `;
 
             if (prepend) {

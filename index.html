@@ -11,7 +11,6 @@ body {
     font-family: 'Poppins', sans-serif;
     background: url('wow.jpeg') no-repeat center center fixed;
     background-size: cover;
-    padding: 20px;
     text-align: center;
     color: darkblue;
     margin: 0;
@@ -29,6 +28,55 @@ body {
     z-index: -1;
 }
 
+.header {
+    width: 100%;
+    background-color: white;
+}
+/* Banner Styles */
+.header-banner {
+    width: 100%;
+    background-color: white;
+    max-width: 1200px;  /* Ensure banner is centered and doesn't stretch too wide */
+    height: 365px; /* Adjust height as needed to cover the top */
+    background-image: url('banner.jpeg'); /* Replace with your background image URL */
+    background-size: cover; /* Ensures the image covers the entire space */
+    background-position: center; /* Keeps the image centered */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    position: relative;
+    text-align: center;
+    padding: 0 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin:0 auto;
+}
+
+/* Text Shadow to make the text more readable on top of the background */
+.header-banner h1 {
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .header-banner {
+        height: 200px; /* Adjust for mobile */
+        font-size: 24px;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-banner {
+        height: 150px;
+        font-size: 18px;
+    }
+}
+
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -36,6 +84,10 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    padding: 20px;
+    /*background-color: white;*/
+    background: linear-gradient(to bottom, white, lightpink);
+    padding-top: 40px;
 }
 
 /* Scrapbook Entry Card */
@@ -100,15 +152,26 @@ iframe {
     font-style: italic;
     font-family: 'Poppins', sans-serif;
     margin-top: 5px;
-    padding: 6px;
+    padding: 10px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 8px;
     color: darkblue;
-    text-align: center;
+    text-align: left;
     max-width: 90%;
+    max-height: 100%;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-wrap: auto;
+}
+
+span{
+    float: right;
+}
+
+.default-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 
@@ -116,8 +179,9 @@ iframe {
     </style>
 </head>
 <body>
+    <div class="header header-banner">
+    </div>
     <div class="background-overlay"></div>
-    <h1 style="text-align:center;">WoW 2025 Scrapbook</h1>
     <div class="container" id="scrapbook-container"></div>
 
     <script>
@@ -136,12 +200,27 @@ iframe {
             "#a0c4ff", "#bdb2ff", "#ffc6ff", "#fffffc"
         ];
 
+        const defaultImages = [
+            "default-1.jpeg", "default-2.jpeg"
+        ];
+
         function getRandomColor() {
             return cardColors[Math.floor(Math.random() * cardColors.length)];
         }
 
+        // Function to assign random gradient background to each card
+        function getRandomCardGradient(index) {
+            const startColor = cardColors[index % cardColors.length]; // Get a color from the array
+            const endColor = cardColors[(index + 1) % cardColors.length]; // Get the next color in the array for the gradient
+            return `linear-gradient(to right, ${startColor}, ${endColor})`; // Return gradient CSS
+        }
+
         function getCardColor(index) {
             return cardColors[index % cardColors.length]; // Cycles through colors in order
+        }
+
+        function getDefaultImage(index) {
+            return defaultImages[index % defaultImages.length]; // Cycles through default images
         }
 
         // Fetch Google Sheet data
@@ -199,19 +278,21 @@ iframe {
             var iframeSrc = match ? `https://drive.google.com/file/d/${match[0]}/preview` : '';
 
             // Get color in sequence
-            const cardColor = getCardColor(currentIndex);
+            const cardColor = getRandomCardGradient(currentIndex);
+            const defaultImage = getDefaultImage(currentIndex);
 
             // Create entry container
             const entry = document.createElement('div');
             entry.classList.add('entry');
-            entry.style.backgroundColor = cardColor; // Apply color
+            // entry.style.backgroundColor = cardColor; // Apply color
+            entry.style.background = cardColor; // Apply color
 
             entry.innerHTML = `
                 <div class="image-container">
-                    ${iframeSrc !== '' ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<img src="default.png" style= alt="No Image" />'}
+                    ${iframeSrc !== '' ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<img src="default-1.jpeg" class="default-img" alt="No Image" />'}
                 </div>
-                <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
-                <p class="message">"${message}"</p>
+                <!--<div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>-->
+                <p class="message">"${message}" <br/><br/><span>- ${name}</span></p>
             `;
 
             if (prepend) {

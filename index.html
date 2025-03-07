@@ -167,7 +167,7 @@
             const imageUrl = row[1];
 
             var match = imageUrl.match(/[-\w]{25,}/);
-            var iframeSrc = match ? `https://drive.google.com/file/d/${match[0]}/preview` : "No image";
+            var iframeSrc = match ? `https://drive.google.com/file/d/${match[0]}/preview` : '';
 
             // Get color in sequence
             const cardColor = getCardColor(currentIndex);
@@ -179,9 +179,7 @@
 
             entry.innerHTML = `
                 <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
-                <div class="image-container">
-                    ${iframeSrc ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<p>No Image</p>'}
-                </div>
+                ${iframeSrc !== '' ? '<div class="image-container"><iframe src="${iframeSrc}" allow="autoplay"></iframe></div>' : ''}
                 <p class="message">"${message}"</p>
             `;
 

@@ -126,6 +126,7 @@ iframe {
     border: none;
     object-fit: cover;
     pointer-events: auto; /* Enable pointer events by default */
+    margin: auto;
 }
 
 body.scrolling iframe {
@@ -184,7 +185,7 @@ span {
 
     </style>
 </head>
-<body>
+<body class="scrolling">
     <div class="header header-banner">
     </div>
     <div class="background-overlay"></div>
@@ -313,10 +314,10 @@ span {
         // Function to detect when user scrolls near the bottom
         window.addEventListener('scroll', function () {
             document.body.classList.add("scrolling");
-            clearTimeout(isScrolling);
+            /*clearTimeout(isScrolling);
             isScrolling = setTimeout(() => {
                 document.body.classList.remove("scrolling");
-            }, 200); // Re-enable iframe interactions after scrolling stops
+            }, 200); // Re-enable iframe interactions after scrolling stops*/
 
 
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {

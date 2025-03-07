@@ -96,6 +96,12 @@
         const sheetId = '1COU4fzfECoqm846j3JMxmyBQEu7fuy0Shmtv8wI6mDE'; // Replace with your Google Sheets ID
         const range = 'Form%20responses%201!A:D'; // Adjust range based on your data
 
+        let allRows = []; // Store all data
+        let currentIndex = 0; // Track loaded items
+        const batchSize = 10; // Number of items to load at a time
+        const initialLoad = 20; // Load first N items
+        const refreshInterval = 600000; // Refresh every 10 minutes (600000 ms)
+
         const cardColors = [
             "#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", 
             "#a0c4ff", "#bdb2ff", "#ffc6ff", "#fffffc"
@@ -109,7 +115,91 @@
             return cardColors[index % cardColors.length]; // Cycles through colors in order
         }
 
-        // Function to fetch Google Sheet data
+        // Fetch Google Sheet data
+        function fetchSheetData(isRefresh = false) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.values) {
+                        const newRows = data.values.slice(1).reverse(); // Remove header and reverse order
+
+                        // On first load, show initial images
+                        if (!isRefresh) {
+                            allRows = newRows;
+                            loadMoreEntries(initialLoad);
+                        } else {
+                            // Compare and add new entries at the top
+                            const newEntries = newRows.filter(row => !allRows.some(existingRow => existingRow[0] === row[0]));
+                            if (newEntries.length > 0) {
+                                allRows = newRows;
+                                addNewEntriesAtTop(newEntries);
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Function to load more images
+        function loadMoreEntries(count) {
+            const scrapbookContainer = document.getElementById('scrapbook-container');
+
+            for (let i = 0; i < count && currentIndex < allRows.length; i++, currentIndex++) {
+                addEntryToContainer(allRows[currentIndex], scrapbookContainer);
+            }
+        }
+
+        // Function to add new entries at the top
+        function addNewEntriesAtTop(newEntries) {
+            const scrapbookContainer = document.getElementById('scrapbook-container');
+            newEntries.reverse().forEach((row) => {
+                addEntryToContainer(row, scrapbookContainer, true);
+                currentIndex++; // Update index as we add new ones
+            });
+        }
+
+        // Function to create a card entry
+        function addEntryToContainer(row, container, prepend = false) {
+            const name = row[3];
+            const message = row[2];
+            const imageUrl = row[1];
+
+            var match = imageUrl.match(/[-\w]{25,}/);
+            var iframeSrc = match ? `https://drive.google.com/file/d/${match[0]}/preview` : "No image";
+
+            // Get color in sequence
+            const cardColor = getCardColor(currentIndex);
+
+            // Create entry container
+            const entry = document.createElement('div');
+            entry.classList.add('entry');
+            entry.style.backgroundColor = cardColor; // Apply color
+
+            entry.innerHTML = `
+                <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
+                <div class="image-container">
+                    ${iframeSrc ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<p>No Image</p>'}
+                </div>
+                <p class="message">"${message}"</p>
+            `;
+
+            if (prepend) {
+                container.prepend(entry); // Add at the top if new
+            } else {
+                container.appendChild(entry); // Add at the bottom normally
+            }
+        }
+
+        // Function to detect when user scrolls near the bottom
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                loadMoreEntries(batchSize); // Load 10 more entries when scrolling near bottom
+            }
+        });
+
+        /*// Function to fetch Google Sheet data
         function fetchSheetData() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
@@ -147,10 +237,10 @@
                     }
                 })
                 .catch(error => console.error('Error fetching data:', error));
-        }
+        }*/
 
-        // Automatically refresh the data every 10 seconds
-        setInterval(fetchSheetData, 600000); // 600000 ms = 600 seconds = 10 minutes
+        // Auto-refresh every 10 minutes
+        setInterval(() => fetchSheetData(true), refreshInterval);
 
         // Initial data fetch
         fetchSheetData();

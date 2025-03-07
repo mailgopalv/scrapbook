@@ -7,84 +7,112 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;700&display=swap');
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: url('wow.jpeg') no-repeat center center fixed;
-            background-size: cover;
-            padding: 20px;
-            text-align: center;
-            color: darkblue;
-            position: relative;
-            margin: 0;
-        }
-        /* Blur Effect Overlay */
-        .background-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(10px); /* Adjust the blur intensity */
-            -webkit-backdrop-filter: blur(10px);
-            z-index: -1; /* Ensures it stays behind the content */
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-        .entry {
-            width: 320px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            transition: transform 0.3s;
-            color: white;
-            position: relative;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .entry:hover {
-            transform: scale(1.05);
-        }
-        .thank-you {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: darkblue;
-        }
-        .image-container {
-            width: 100%;
-            height: 220px; /* Adjust height for vertical rectangle */
-            overflow: hidden;
-            border-radius: 20px; /* Rounded corners */
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.3);
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('wow.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+    text-align: center;
+    color: darkblue;
+    margin: 0;
+}
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border-radius: 20px; /* Match the image container */
-        }
-        .message {
-            font-size: 16px;
-            font-weight: bold;
-            font-style: italic;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: darkblue;
-        }
+/* Blur Effect Overlay */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: -1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Scrapbook Entry Card */
+.entry {
+    width: 320px;
+    height: 500px; /* Maintains a balanced aspect */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s;
+    color: white;
+    position: relative;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.entry:hover {
+    transform: scale(1.05);
+}
+
+/* Image Container (60% of Card) */
+.image-container {
+    width: 100%;
+    height: 60%; /* Image takes 60% of the card */
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Image inside the Container */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+}
+
+/* Content (40% of Card) */
+.content {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Thank You Message */
+.thank-you {
+    font-size: 18px;
+    font-weight: bold;
+    color: darkblue;
+}
+
+/* Message Styling (Truncated After 100 Characters) */
+.message {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 5px;
+    padding: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: darkblue;
+    text-align: center;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -179,10 +207,10 @@
             entry.style.backgroundColor = cardColor; // Apply color
 
             entry.innerHTML = `
-                <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
                 <div class="image-container">
                     ${iframeSrc !== '' ? `<iframe src="${iframeSrc}" allow="autoplay"></iframe>` : '<img src="default.png" style= alt="No Image" />'}
                 </div>
+                <div class="thank-you">Thank you, <strong>${name}</strong>! 🎉</div>
                 <p class="message">"${message}"</p>
             `;
 

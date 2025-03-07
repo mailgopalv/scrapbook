@@ -55,6 +55,7 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 10px;
+            color: darkblue;
         }
         .image-container {
             width: 100%;
@@ -81,6 +82,7 @@
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
+            color: darkblue;
         }
     </style>
 </head>
@@ -117,7 +119,7 @@
 
                         rows.slice(1).reverse().forEach((row, index) => {
                             // Assuming columns: Name, Message, Image URL
-                            const name = row[0];
+                            const name = row[3];
                             const message = row[2];
                             const imageUrl = row[1];
 
